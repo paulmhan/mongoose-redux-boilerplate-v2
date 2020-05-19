@@ -4,9 +4,18 @@ import { Form, Segment, Button } from 'semantic-ui-react';
 import { email, length, required } from 'redux-form-validators';
 import axios from 'axios';
 
+import { AUTH_USER, AUTH_USER_ERROR } from "../../actions/types";
+
 class SignUp extends Component {
-  onSubmit = (formValues, dispatch) => {
-    console.log(formValues);
+  
+  onSubmit = async (formValues, dispatch) => {
+    try {
+      const { data } = await axios.post("/api/auth/signup", formValues);
+      dispatch({ type: AUTH_USER, payload: data.token });
+      this.props.history.push("/counter");
+    } catch (error) {
+      dispatch({ type: AUTH_USER_ERROR, paylod: error });
+    }
   } 
 
 
