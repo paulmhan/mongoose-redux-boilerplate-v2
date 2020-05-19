@@ -15,7 +15,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 // 3rd param is any middlwares we want applied to redux
 const store = createStore(
   reducers,
-  {},
+  { auth: {authenticated: localStorage.getItem("token")}},
   composeEnhancers(applyMiddleware(reduxThunk))
 );
 
