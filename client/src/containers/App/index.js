@@ -4,7 +4,10 @@ import { Grid } from 'semantic-ui-react';
 
 import Counter from '../Counter';
 import AllTodosList from '../AllTodosList';
+
 import SignUp from '../SignUp';
+import SignOut from "../SignOut";
+
 import { connect } from "react-redux";
 import Navbar from './../../components/Navbar';
 
@@ -16,6 +19,7 @@ class App extends Component {
           <Navbar isLoggedIn={this.props.authenticated}/>
           <Route exact path='/counter' component={Counter}/>
           <Route exact path='/alltodos' component={AllTodosList}/>
+          <Route exact path="/signout" component={SignOut}/>
           <Route exact path='/' component={SignUp}/>
         </Grid.Column>
       </Grid>
