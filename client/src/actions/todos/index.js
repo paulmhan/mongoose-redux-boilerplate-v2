@@ -1,7 +1,6 @@
 import {
   GET_ALL_TODOS,
   GET_ALL_TODOS_ERROR,
-  INCREMENT,
 } from '../types';
 
 import axios from 'axios';

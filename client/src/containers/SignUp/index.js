@@ -38,6 +38,7 @@ class SignUp extends Component {
 
   render() {
     console.log("Inside of signup render", this.props);
+    const { handleSubmit, invalid, submitting, submitFailed } = this.props;
     return (
       <Form size='large'>
         <Segment stacked>
@@ -61,6 +62,13 @@ class SignUp extends Component {
                 length({ min: 6, msg: 'Your password must be at least 6 characters long' })
               ]
             }
+          />
+          <Button
+          content="Sign Up"
+          color="teal"
+          fluid
+          size="large"
+          type="submit"
           />
         </Segment>
       </Form>
