@@ -5,6 +5,10 @@ import { email, length, required } from 'redux-form-validators';
 import axios from 'axios';
 
 class SignUp extends Component {
+  onSubmit = (formValues, dispatch) => {
+    console.log(formValues);
+  } 
+
 
   renderEmail = ({ input, meta }) => {
     return (
@@ -40,7 +44,7 @@ class SignUp extends Component {
     console.log("Inside of signup render", this.props);
     const { handleSubmit, invalid, submitting, submitFailed } = this.props;
     return (
-      <Form size='large'>
+      <Form size='large' onSubmit={handleSubmit(this.onSubmit)}>
         <Segment stacked>
           <Field
             name='email'
@@ -69,6 +73,7 @@ class SignUp extends Component {
           fluid
           size="large"
           type="submit"
+          disabled={ invalid || submitting || submitFailed }
           />
         </Segment>
       </Form>
@@ -86,7 +91,7 @@ const asyncValidate = async formValues => {
       throw new Error();
     }
   } catch (e) {
-    throw { email: 'Email already exists, please sign up with a different email' };
+    console.log({ email: 'Email already exists, please sign up with a different email' },e);
   }
 }
 
