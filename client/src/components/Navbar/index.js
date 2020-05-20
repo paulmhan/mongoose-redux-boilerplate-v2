@@ -13,5 +13,3 @@ export default (props) => (
     <Menu.Item as={Link} to='/alltodos' content='Get All Todos'/>
   </Menu>
 );
-    
-

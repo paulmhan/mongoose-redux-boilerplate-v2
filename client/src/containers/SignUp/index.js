@@ -4,21 +4,19 @@ import { Form, Segment, Button } from 'semantic-ui-react';
 import { email, length, required } from 'redux-form-validators';
 import axios from 'axios';
 
-import { AUTH_USER, AUTH_USER_ERROR } from "../../actions/types";
+import { AUTH_USER, AUTH_USER_ERROR } from '../../actions/types';
 
 class SignUp extends Component {
-  
   onSubmit = async (formValues, dispatch) => {
     try {
-      const { data } = await axios.post("/api/auth/signup", formValues);
-      localStorage.setItem("token", data.token);
+      const { data } = await axios.post('/api/auth/signup', formValues);
+      localStorage.setItem('token', data.token);
       dispatch({ type: AUTH_USER, payload: data.token });
-      this.props.history.push("/counter");
-    } catch (error) {
-      dispatch({ type: AUTH_USER_ERROR, paylod: error });
+      this.props.history.push('/counter');
+    } catch (e) {
+      dispatch({ type: AUTH_USER_ERROR, payload: e });
     }
-  } 
-
+  }
 
   renderEmail = ({ input, meta }) => {
     return (
@@ -78,12 +76,12 @@ class SignUp extends Component {
             }
           />
           <Button
-          content="Sign Up"
-          color="teal"
-          fluid
-          size="large"
-          type="submit"
-          disabled={ invalid || submitting || submitFailed }
+            content='Sign up'
+            color='teal'
+            fluid
+            size='large'
+            type='submit'
+            disabled={ invalid || submitting || submitFailed }
           />
         </Segment>
       </Form>
@@ -95,13 +93,11 @@ class SignUp extends Component {
 const asyncValidate = async formValues => {
   try {
     const { data } = await axios.get(`/api/user/emails?email=${formValues.email}`);
-    // const foundEmail = data.some(user => user.email === formValues.email);
-    console.log(data);
     if (data) {
       throw new Error();
     }
   } catch (e) {
-    console.log({ email: 'Email already exists, please sign up with a different email' },e);
+    throw { email: 'Email already exists, please sign up with a different email' };
   }
 }
 
