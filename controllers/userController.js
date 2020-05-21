@@ -1,18 +1,17 @@
 const { User, Todo } = require('../models/index');
 
 module.exports = {
-  //we have access to req.user 
   addTodo: async (req, res) => {
     const { text } = req.body;
     if (!text) {
-      return res.status(400).json({ error: "You must provide a text." })
+      return res.status(400).json({ error: 'You must provide text' });
     }
     try {
       const newTodo = await new Todo({ text, user: req.user._id }).save();
       req.user.todos.push(newTodo);
       await req.user.save();
       return res.status(200).json(newTodo);
-    } catch (error) {
+    } catch (e) {
       return res.status(403).json({ e });
     }
   },
@@ -55,14 +54,14 @@ module.exports = {
     }
   },
   updateTodoById: async (req, res) => {
-    //   Grab todoId from params
+  //   Grab todoId from params
     const { todoId } = req.params;
     //  grab text and completed from the database
     const { text, completed } = req.body;
     try {
       const todoToUpdate = await Todo.findById(todoId);
       if (!todoToUpdate) {
-        return res.status(401).json({ error: 'No todo with that Id' });
+        return res.status(401).json({ error: 'No todo with that Id'});
       }
       if (req.user._id.toString() !== todoToUpdate.user.toString()) {
         return res.status(401).json({ error: "You cannot update a todo that's not yours" });
