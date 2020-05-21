@@ -1,14 +1,25 @@
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
-import { Header, Form, Segment, Message, List, Pagination } from 'semantic-ui-react';
+import { Header, Form, Segment, Message, List, Pagination, Button } from 'semantic-ui-react';
 
 import { compose } from 'redux';
 import axios from 'axios';
 
 import { getUserTodos } from '../../actions/todos';
+import { ADD_TODO_ERROR } from "../../actions/types";
 
 class UserTodoList extends Component {
+
+  onSubmit = async (formValues, dispatch) => {
+    try {
+      await axios.post("/api/user/todos", formValues, { headers: { "authorization": localStorage.getItem("token")}} );
+      this.props.getUserTodos();
+    } catch (e) {
+      dispatch({ type: ADD_TODO_ERROR, payload:e})
+    }
+
+  }
 
   componentDidMount() {
     this.props.getUserTodos();
@@ -28,15 +39,22 @@ class UserTodoList extends Component {
     )
   }
   render() {
+    const { handleSubmit } = this.props;
 
     return (
       <>
         <Header as='h2' color='teal' textAlign='center' content='Welcome to do the todo app'/>
-        <Form size='large'>
+        <Form size='large' onSubmit={handleSubmit(this.onSubmit)}>
           <Segment stacked>
             <Field
               name='text'
               component={this.renderAddTodo}
+            />
+            <Button 
+            type="submit"
+            fluid
+            color="teal"
+            content="Add a Todo"
             />
           </Segment>
         </Form>
