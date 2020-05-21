@@ -6,14 +6,23 @@ import { Header, Form, Segment, Message, List, Pagination, Button } from 'semant
 import { compose } from 'redux';
 import axios from 'axios';
 
+import UserTodoListItems from "./UserTodoListItems";
+
 import { getUserTodos } from '../../actions/todos';
-import { ADD_TODO_ERROR } from "../../actions/types";
+import { ADD_TODO_ERROR,ADD_TODO } from "../../actions/types";
 
 class UserTodoList extends Component {
+
+  state= {
+    activePage: 1,
+    start: 0,
+    end: 10
+  }
 
   onSubmit = async (formValues, dispatch) => {
     try {
       await axios.post("/api/user/todos", formValues, { headers: { "authorization": localStorage.getItem("token")}} );
+      dispatch({ type: ADD_TODO })
       this.props.getUserTodos();
     } catch (e) {
       dispatch({ type: ADD_TODO_ERROR, payload:e})
@@ -38,6 +47,18 @@ class UserTodoList extends Component {
       </>
     )
   }
+
+
+  handlePageChange = (event,data) => {
+    console.log(data);
+    this.setState({
+      activePage: data.activePage,
+      start: data.activePage === 1 ? 0 : data.activePage * 10 - 10,
+      end: data.activePage * 10
+    })
+  }
+
+
   render() {
     const { handleSubmit } = this.props;
 
@@ -58,6 +79,18 @@ class UserTodoList extends Component {
             />
           </Segment>
         </Form>
+        <List animated divided selection>
+          <UserTodoListItems todos={this.props.todos.slice(this.state.start,this.state.end)}/>
+        </List>
+        {
+          this.props.todos.length <= 9 ? 
+          null
+          : <Pagination
+            totalPages={ Math.ceil( this.props.todos.length / 10)}
+            onPageChange={ (event,data) => this.handlePageChange(event,data) }
+            activePage={this.state.activePage}
+          />
+        }
       </>
     );
   }
